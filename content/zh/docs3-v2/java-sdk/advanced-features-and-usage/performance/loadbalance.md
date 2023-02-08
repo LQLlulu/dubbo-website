@@ -22,6 +22,8 @@ description: "Dubbo 提供的集群负载均衡策略"
 | LeastActiveLoadBalance      | 最少活跃优先 + 加权随机 | 背后是能者多劳的思想                            |
 | ShortestResponseLoadBalance | 最短响应优先 + 加权随机 | 更加关注响应速度                                |
 | ConsistentHashLoadBalance   | 一致性 Hash             | 确定的入参，确定的提供者，适用于有状态请求      |
+| p2c                         | p2c + 最少活跃优      | 基于p2c方法的负载均衡      |
+| adaptive                    | 自适应的方法          | 基于cpuLoad等硬件参数及指数平滑等方法的自适应负载均衡办法      |
 
 
 
@@ -73,6 +75,16 @@ description: "Dubbo 提供的集群负载均衡策略"
 * 算法参见：[Consistent Hashing | WIKIPEDIA](http://en.wikipedia.org/wiki/Consistent_hashing)
 * 缺省只对第一个参数 Hash，如果要修改，请配置 `<dubbo:parameter key="hash.arguments" value="0,1" />`
 * 缺省用 160 份虚拟节点，如果要修改，请配置 `<dubbo:parameter key="hash.nodes" value="320" />`
+
+
+### p2c
+* **基于p2c的最少活跃调用优先**,原理与 LeastActive 方法类似，使用p2c方法进行改进，效果有一定的提升
+
+
+### adaptive
+* **自适应的负载均衡方法**，利用cpuLoad等硬件指标基于p2c和指数平滑等方法的自适应负载均衡的方法。
+* 引入硬件指标可以更好的判断 provider 端机器的负载情况，更有利于提高整体的吞吐量。
+* 适合后端机器规模较大，且机器之间性能差距较大的情况。在规模小且机器性能均衡的情况下效果可能不理想。
 
 ## 配置
 
